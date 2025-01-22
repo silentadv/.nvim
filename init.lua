@@ -1,8 +1,7 @@
-require('config.lazy');
+require('config.lazy')
 require('config.telescope');
 require('config.nvim-tree');
 require('config.mason');
-require('config.nvim-cmp');
 
 local opt = vim.opt;
 

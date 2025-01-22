@@ -32,14 +32,8 @@ require("lazy").setup({
     },
     'nvim-tree/nvim-tree.lua',
     'nvim-tree/nvim-web-devicons',
-    'neovim/nvim-lspconfig',
     'williamboman/mason-lspconfig.nvim',
     'williamboman/mason.nvim',
-    'hrsh7th/nvim-cmp',
-    'hrsh7th/cmp-nvim-lsp',
-    'hrsh7th/cmp-vsnip',
-    'hrsh7th/vim-vsnip',
-    'hrsh7th/vim-vsnip-integ',
     'mikelue/vim-maven-plugin',
     'BurntSushi/ripgrep',
     { "catppuccin/nvim", name = "catppuccin", priority = 1000 },
@@ -59,6 +53,62 @@ require("lazy").setup({
             { "<c-l>", "<cmd><C-U>TmuxNavigateRight<cr>" },
             { "<c-\\>", "<cmd><C-U>TmuxNavigatePrevious<cr>" },
         },
+    },
+    {
+      'saghen/blink.cmp',
+      -- optional: provides snippets for the snippet source
+      dependencies = 'rafamadriz/friendly-snippets',
+
+      -- use a release tag to download pre-built binaries
+      version = '*',
+      -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
+      -- build = 'cargo build --release',
+      -- If you use nix, you can build from source using latest nightly rust with:
+      -- build = 'nix run .#build-plugin',
+
+      ---@module 'blink.cmp'
+      ---@type blink.cmp.Config
+      opts = {
+        keymap = { preset = 'default' },
+
+        appearance = {
+          use_nvim_cmp_as_default = true,
+          nerd_font_variant = 'mono'
+        },
+
+        signature = { enabled = true }
+      },
+    },
+    {
+      'neovim/nvim-lspconfig',
+      dependencies = { 'saghen/blink.cmp',  {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+          library = {
+            { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+          },
+        },
+      },
+},
+
+      -- example using `opts` for defining servers
+      opts = {
+        servers = {
+          lua_ls = {},
+          tsserver = {}
+        }
+      },
+
+      config = function(_, opts)
+        local lspconfig = require('lspconfig')
+        for server, config in pairs(opts.servers) do
+          -- passing config.capabilities to blink.cmp merges with the capabilities in your
+          -- `opts[server].capabilities, if you've defined it
+          config.capabilities = require('blink.cmp').get_lsp_capabilities()
+          lspconfig[server].setup(config)
+        end
+      end
     }
   },
   -- Configure any other settings here. See the documentation for more details.
