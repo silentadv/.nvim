@@ -24,8 +24,10 @@ vim.g.maplocalleader = "\\"
 -- Setup lazy.nvim
 require("lazy").setup({
   spec = {
+    'silentadv/fterm.nvim',
+    { 'wakatime/vim-wakatime', lazy = false },
+    'rebelot/kanagawa.nvim',
     'nvim-lua/plenary.nvim',
-    'folke/tokyonight.nvim',
     {
      'nvim-telescope/telescope.nvim', tag = '0.1.8',
       dependencies = { 'nvim-lua/plenary.nvim' }
@@ -56,18 +58,12 @@ require("lazy").setup({
     },
     {
       'saghen/blink.cmp',
-      -- optional: provides snippets for the snippet source
       dependencies = 'rafamadriz/friendly-snippets',
-
-      -- use a release tag to download pre-built binaries
       version = '*',
-      -- AND/OR build from source, requires nightly: https://rust-lang.github.io/rustup/concepts/channels.html#working-with-nightly-rust
-      -- build = 'cargo build --release',
-      -- If you use nix, you can build from source using latest nightly rust with:
-      -- build = 'nix run .#build-plugin',
 
       ---@module 'blink.cmp'
       ---@type blink.cmp.Config
+
       opts = {
         keymap = { preset = 'default' },
 
@@ -103,17 +99,12 @@ require("lazy").setup({
       config = function(_, opts)
         local lspconfig = require('lspconfig')
         for server, config in pairs(opts.servers) do
-          -- passing config.capabilities to blink.cmp merges with the capabilities in your
-          -- `opts[server].capabilities, if you've defined it
           config.capabilities = require('blink.cmp').get_lsp_capabilities()
           lspconfig[server].setup(config)
         end
       end
     }
   },
-  -- Configure any other settings here. See the documentation for more details.
-  -- colorscheme that will be used when installing plugins.
   install = { colorscheme = { "habamax" } },
-  -- automatically check for plugin updates
   checker = { enabled = true },
 })
