@@ -13,3 +13,5 @@ opt.expandtab = true;
 vim.cmd('set number');
 vim.cmd('colorscheme catppuccin-mocha');
 vim.cmd('set clipboard+=unnamedplus');
+
+vim.api.nvim_set_keymap('n', '<leader>fm', ':lua vim.lsp.buf.format()<CR>', { noremap = true, silent = true })
