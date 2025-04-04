@@ -1,0 +1,3 @@
+return {
+    "silentadv/fterm.nvim"
+}
