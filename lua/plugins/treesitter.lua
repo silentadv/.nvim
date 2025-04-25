@@ -15,6 +15,7 @@ return {
                     "typescript",
                     "html",
                     "nix",
+                    "go"
                 },
                 sync_install = false,
                 highlight = { enable = true },
